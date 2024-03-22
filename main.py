@@ -112,8 +112,15 @@ async def save_user(request: Request):
 
 
 @app.get("/archive")
-async def save_user(request: Request):
+async def archive(request: Request):
     params = get_user(request)
     params["tasks"] = list(itertools.islice(Task.get_all(database_connection), 5))
 
     return templates.TemplateResponse("html/archive.html", params)
+
+@app.get("/tasks/{task_id}")
+async def task(request: Request, task_id):
+    params = get_user(request)
+    task = Task.pull_from_database(database_connection, task_id)
+    params["task"] = task
+    return templates.TemplateResponse("html/task.html", params)

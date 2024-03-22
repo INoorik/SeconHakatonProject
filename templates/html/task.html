@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная - CTF</title>
+</head>
+<body>
+
+{% include 'html/login_container.html' %}
+{% include 'html/top_bar.html' %}
+
+<h2> {{task.name}}</h2>
+<div class="task-description">
+	{{task.description}}
+</div>
+<form action="/subit_solution/{{task.name}}" method="get">
+	<input type="text" name="answer">
+	<input type="submit" value="Send">
+</form>
+
+{% if task.file %}
+<a href="/task_files/{{task.file}}" download> Download file</a>
+{% endif %}
+
+</body>
+</html>
