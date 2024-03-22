@@ -33,20 +33,20 @@ class User:
                        """,
                        [id])
         if cursor.rowcount() == 0:
-            throw Exception("No such user")
+            Exception("No such user")
         rating, name = cursor.fetchone()
         return User(id, name, rating)
 
     @staticmethod
-    def if_exist(self):
+    def if_exist(self, connection):
         cursor = connection.cursor()
         cursor.execute("""
                        SELECT user_id FROM Users WHERE user_id=?
                        """,
                        [id])
-        return cursor.rowcount() != 0:
+        return cursor.rowcount() != 0
 
-    def get_submissions(self):
+    def get_submissions(self, connection):
        cursor = connection.cursor()
        cursor.execute("""
                       SELECT user_id, task_id, verdict, time, solution FROM Submissions WHERE user_id=?
@@ -75,7 +75,7 @@ class Task:
         self.answer_key = answer_key
         self.file = file
 
-    def get_submissions(self):
+    def get_submissions(self, connection):
        cursor = connection.cursor()
        cursor.execute("""
                       SELECT user_id, task_id, verdict, time, solution FROM Submissions WHERE task_id=?
@@ -92,7 +92,7 @@ class Task:
                        """,
                        [id])
         if cursor.rowcount() == 0:
-            throw Exception("No such user")
+            Exception("No such user")
         name, description, difficulty, answer_key = cursor.fetchone()
         return Task(id, name, description, difficulty, answer_key, file)
 
@@ -104,6 +104,4 @@ class Task:
                        """
                        )
         for task in cursor.fetchall():
-            yield Task(id, name, description, difficulty, answer_key, file)
-
-
+            yield Task(id, *task)
