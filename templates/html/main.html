@@ -6,10 +6,7 @@
 </head>
 <body>
 
-{% if err %}
-<div>Error during execution of query: <code>{{req}}</code></div>
-{% else %}
-<div>Result for query <code>{{req}}</code> is <code>{{res}}</code></div>
-{% endif %}
+{% include 'html/top_bar.html' %}
+
 </body>
 </html>
