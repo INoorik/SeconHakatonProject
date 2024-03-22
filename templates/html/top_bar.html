@@ -1,8 +1,8 @@
 <div class="menu-container"> 
 	<ul class="menu-list">
-		<li class="active-menu-tab"><a href="#">Home</a></li>
-		<li class=""><a href="#">Tasks</a></li>
-		<li class=""><a href="#">Contests</a></li>
-		<li class=""><a href="#">Top</a></li>
+		<li class="{% if current == 'Home' %} active-menu-tab {% endif %}"><a href="/">Home</a></li>
+		<li class="{% if current == 'Tasks' %} active-menu-tab {% endif %}"><a href="#">Tasks</a></li>
+		<li class="{% if current == 'Contests' %} active-menu-tab {% endif %}"><a href="#">Contests</a></li>
+		<li class="{% if current == 'Top' %} active-menu-tab {% endif %}"><a href="/top">Top</a></li>
 	</ul>
 </div>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+
+{% include 'html/login_container.html' %}
+{% include 'html/top_bar.html' %}
+
+<form method="get" action="/save_user">
+    <p class="Login_p">Login:</p>
+    <input type="text" name="login">
+    <input class="button" type="submit" value="Submit">
+</form>
+
+</body>
+</html>
