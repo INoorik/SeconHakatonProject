@@ -125,8 +125,16 @@ class Task:
     def get_all(connection):
         cursor = connection.cursor()
         cursor.execute("""
-                       SELECT name, description, difficulty, answer_key FROM Tasks 
+                       SELECT id, name, description, difficulty, answer_key, file FROM Tasks ORDER BY id DESC
                        """
                        )
         for task in cursor.fetchall():
-            yield Task(id, *task)
+            yield Task(*task)
+
+    def flush(self, connection):
+        cursor = connection.cursor()
+        cursor.execute("""
+                      REPLACE INTO Tasks(name, description, difficulty, answer_key, file) VALUES (?, ?, ?, ?, ?) 
+                      """,
+                       [self.name, self.description, self.difficulty, self.answer_key, self.file])
+        connection.commit()

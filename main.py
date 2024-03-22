@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-from database_api import User, database_connection
+from database_api import User, database_connection, Task
 from yandexid import *
+import itertools
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -108,3 +109,11 @@ async def save_user(request: Request):
         user.flush(database_connection)
 
     return RedirectResponse("/")
+
+
+@app.get("/archive")
+async def save_user(request: Request):
+    params = get_user(request)
+    params["tasks"] = list(itertools.islice(Task.get_all(database_connection), 5))
+
+    return templates.TemplateResponse("html/archive.html", params)
