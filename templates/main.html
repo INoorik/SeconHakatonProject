@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% if err %}
+<div>Error during execution of query: <code>{{req}}</code></div>
+{% else %}
+<div>Result for query <code>{{req}}</code> is <code>{{res}}</code></div>
+{% endif %}
+</body>
+</html>

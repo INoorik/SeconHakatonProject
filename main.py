@@ -1,16 +1,25 @@
-# This is a sample Python script.
+from urllib.parse import unquote
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+@app.get("/calc", response_class=HTMLResponse)
+def calc(request: Request):
+    ex = " "
+    try:
+        ex = unquote(request.url.query)
+        res = eval(ex)
+    except Exception:
+        return templates.TemplateResponse('main.html', {"request": request, 'req': ex, 'err': True})
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    return templates.TemplateResponse("main.html", {"request": request, "req": ex, 'res': res, 'err': False})
