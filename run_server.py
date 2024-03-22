@@ -1,5 +1,4 @@
 import uvicorn
-
 from main import app as fastapi_app
 
 if __name__ == "__main__":

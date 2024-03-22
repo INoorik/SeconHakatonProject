@@ -10,19 +10,22 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 
-@app.get("/")
-async def main_page(response: Response, request: Request):
+def get_user(request):
     cookie = request.cookies
     is_login = "token" in cookie
-    login = ""
+    login, email, phone, avatar = [""] * 4
     auth_url = "/"
 
     try:
         if is_login:
             access_token = cookie["token"]
             yandex_id = YandexID(access_token)
-            js = yandex_id.get_user_info_json()
-            login = js.login
+            user_data = yandex_id.get_user_info_json()
+            login = user_data.login
+            email = user_data.emails[0]
+            phone = user_data.default_phone.number
+            avatar = user_data.default_avatar_id
+
     except Exception:
         is_login = False
 
@@ -34,12 +37,18 @@ async def main_page(response: Response, request: Request):
         )
         auth_url = yandex_oauth.get_authorization_url()
 
-    return templates.TemplateResponse("html/main.html", {"request": request, "is_login": is_login,
-                                                         "login_name": login, "login_ref": auth_url})
+    return {"request": request, "login_name": login, "is_login": is_login,
+            "login_ref": auth_url, "email": email, "phone": phone, "avatar": avatar}
+
+
+@app.get("/")
+async def main_page(request: Request):
+    params = get_user(request)
+    return templates.TemplateResponse("html/main.html", params)
 
 
 @app.get("/logout")
-async def logout(response: Response, request: Request):
+async def logout():
     response = RedirectResponse("/")
     response.delete_cookie("token")
     return response
