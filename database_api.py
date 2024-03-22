@@ -18,6 +18,13 @@ class Submission:
         self.time = time
         self.solution = solution
 
+    def flush(self, connection):
+        cursor = connection.cursor()
+        cursor.execute("""
+                      INSERT INTO Submissions(user_id, task_id, verdict, time, solution) VALUES (?, ?, ?, ?, ?) 
+                       """, 
+                       [self.user_id, self.task_id, self.verdict, self.time, self.solution])
+
 
 class User:
     def __init__(self, id, name, rating):
@@ -29,22 +36,22 @@ class User:
     def pull_from_database(connection, id):
         cursor = connection.cursor()
         cursor.execute("""
-                       SELECT rating, name FROM Users WHERE user_id=?
+                       SELECT rating, name FROM Users WHERE id=?
                        """,
                        [id])
-        if cursor.rowcount() == 0:
-            Exception("No such user")
-        rating, name = cursor.fetchone()
+        result = cursor.fetchone()
+        if result is None:
+            raise Exception("No such user")
+        rating, name = result
         return User(id, name, rating)
 
-    @staticmethod
     def if_exist(self, connection):
         cursor = connection.cursor()
         cursor.execute("""
-                       SELECT user_id FROM Users WHERE user_id=?
+                       SELECT id FROM Users WHERE id=?
                        """,
-                       [id])
-        return cursor.rowcount() != 0
+                       [self.id])
+        return not (cursor.fetchone() is None)
 
     def get_submissions(self, connection):
        cursor = connection.cursor()
@@ -88,12 +95,13 @@ class Task:
     def pull_from_database(connection, id):
         cursor = connection.cursor()
         cursor.execute("""
-                       SELECT name, description, difficulty, answer_key FROM Tasks WHERE id=?
+                       SELECT name, description, difficulty, answer_key, file FROM Tasks WHERE id=?
                        """,
                        [id])
-        if cursor.rowcount() == 0:
-            Exception("No such user")
-        name, description, difficulty, answer_key = cursor.fetchone()
+        result = cursor.fetchone()
+        if result is None:
+            raise Exception("Could not find task")
+        name, description, difficulty, answer_key, file = result
         return Task(id, name, description, difficulty, answer_key, file)
 
     @staticmethod
