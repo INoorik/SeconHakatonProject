@@ -1,0 +1,9 @@
+<div class="login-container"> 
+	{% if is_login %}
+		<a href="/personal">{{login_name}}</a>
+		<a href="/quit">Quit</a>
+	{% else %}
+		<a href="/login">Login</a>
+		<a href="/register">Register</a>
+	{% endif %}
+</div>
