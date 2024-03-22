@@ -1,9 +1,10 @@
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-from database_api import User, database_connection, Task
+from database_api import database_connection, Task, User, Submission
 from yandexid import *
 import itertools
+import datetime
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -118,9 +119,23 @@ async def archive(request: Request):
 
     return templates.TemplateResponse("html/archive.html", params)
 
+
 @app.get("/tasks/{task_id}")
 async def task(request: Request, task_id):
     params = get_user(request)
     task = Task.pull_from_database(database_connection, task_id)
     params["task"] = task
     return templates.TemplateResponse("html/task.html", params)
+
+
+@app.get("/submit_solution/{task_id}")
+async def submit_solution(request: Request, task_id):
+    params = get_user(request)
+    task = Task.pull_from_database(database_connection, task_id)
+    user_id = params["id"]
+    user_answer = request.query_params["answer"]
+    true_answer = task.answer_key
+    verdict = "Accepted" if user_answer==true_answer else "Wrong answer"
+    submission = Submission(user_id, task_id, verdict, datetime.datetime.now(), user_answer)
+    submission.flush(database_connection)
+    return RedirectResponse(f"/tasks/{task_id}")
