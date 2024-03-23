@@ -20,6 +20,11 @@ ul.menu-list li{
 	margin-right: 15px;
 }
 
+.table {
+	background-color: black;
+	border: 5px solid white;
+}
+
 .table thead th {
 	padding: 10px;
 	font-weight: 500;
@@ -45,4 +50,14 @@ ul.menu-list li{
 
 a{
 	color: white;
+}
+
+.menu-container {
+	width: 100%;
+	height: 30;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	border-top: 5px solid white;
+	border: 5px solid white;
+	background-color: black;
 }
