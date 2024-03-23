@@ -20,7 +20,9 @@
 	<input type="text" name="answer">
 	<input type="submit" class = "submit" value="Send">
 </form>
+{% endif %}
 <a href="/submissions/{{task.id}}">Watch all submissions</a>
+{% if is_login %}
 <table class="submissions table">
   <caption>
 	Your submissions

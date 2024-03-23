@@ -54,11 +54,14 @@ async def main_page(request: Request):
     user = User(params["id"], "", 0, "", "")
     if user.is_exist(database_connection):
         user = User.pull_from_database(database_connection, params["id"])
+        params["show"] = True
         params["rating"] = user.rating
         params["name"] = params["login_name"]
         submissions = list(user.get_submissions(database_connection, 10))
         tasks = [Task.pull_from_database(database_connection, submission.task_id) for submission in submissions]
         params["tasks_and_submissions"] = list(zip(tasks, submissions))
+    else:
+        params["show"] = False
 
     params["current"] = "Home"
     return templates.TemplateResponse("html/main.html", params)
@@ -72,6 +75,7 @@ async def users(id, request: Request):
         return RedirectResponse("/")
 
     user = User.pull_from_database(database_connection, id)
+    params["show"] = True
     params["rating"] = user.rating
     params["name"] = user.name
     params["avatar"] = user.avatar
