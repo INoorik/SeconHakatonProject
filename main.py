@@ -125,6 +125,7 @@ async def task(request: Request, task_id):
     params = get_user(request)
     task = Task.pull_from_database(database_connection, task_id)
     params["task"] = task
+    params["submissions"] = Submission.get_by_user_and_task(database_connection, params["id"], task.id, 10)
     return templates.TemplateResponse("html/task.html", params)
 
 

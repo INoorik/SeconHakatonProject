@@ -13,10 +13,35 @@
 <div class="task-description">
 	{{task.description}}
 </div>
+
+{% if is_login %}
 <form action="/submit_solution/{{task.id}}" method="get">
 	<input type="text" name="answer">
 	<input type="submit" value="Send">
 </form>
+<table class="submissions">
+  <caption>
+	Earlier submissions
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Flag</th>
+      <th scope="col">Verdict</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for submission in submissions %}
+    <tr>
+      <td>{{submission.solution}}</td>
+      <td>{{submission.verdict}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% else %}
+<p> Login before submitting </p>
+{% endif %}
 
 {% if task.file %}
 <a href="/task_files/{{task.file}}" download> Download file</a>

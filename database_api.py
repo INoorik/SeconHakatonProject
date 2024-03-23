@@ -31,6 +31,17 @@ class Submission:
                        [self.user_id, self.task_id, self.verdict, self.time, self.solution])
         connection.commit()
 
+    @staticmethod
+    def get_by_user_and_task(connection, user_id, task_id, count):
+        cursor = connection.cursor()
+        cursor.execute("""
+                       SELECT user_id, task_id, verdict, time, solution FROM Submissions WHERE user_id = ? AND task_id = ? ORDER BY time DESC 
+                       """,
+                       [user_id, task_id])
+
+        for submission in cursor.fetchmany(count):
+            yield Submission(*submission)
+
 
 class User:
     def __init__(self, id, name, rating):
