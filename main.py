@@ -53,12 +53,13 @@ async def main_page(request: Request):
     if User(params["id"], "", 0, "", "").is_exist(database_connection):
         params["rating"] = User.pull_from_database(database_connection, params["id"]).rating
 
+    params["name"] = params["login_name"]
     params["current"] = "Home"
     return templates.TemplateResponse("html/main.html", params)
 
 
 @app.get("/users/{id}")
-async def main_page(id, request: Request):
+async def users(id, request: Request):
     params = get_user(request)
     if (str(id) == str(params["id"]) or
             not User(id, "", 0, "", "").is_exist(database_connection)):
@@ -66,8 +67,8 @@ async def main_page(id, request: Request):
 
     user = User.pull_from_database(database_connection, id)
     params["rating"] = user.rating
-    params["login_name"] = user.name
-    params["avatar"] = user.name
+    params["name"] = user.name
+    params["avatar"] = user.avatar
     params["current"] = "Not Home"
     return templates.TemplateResponse("html/main.html", params)
 
