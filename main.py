@@ -167,17 +167,24 @@ async def task(request: Request, task_id):
 @app.get("/submit_solution/{task_id}")
 async def submit_solution(request: Request, task_id):
     params = get_user(request)
-    try:
-        task = Task.pull_from_database(database_connection, task_id)
-        user_id = params["id"]
-        user_answer = request.query_params["answer"]
-        true_answer = task.answer_key
-        verdict = "Accepted" if user_answer == true_answer else "Wrong answer"
-        submission = Submission(user_id, task_id, verdict, datetime.datetime.now(), user_answer)
-        submission.flush(database_connection)
+    #try:
+    task = Task.pull_from_database(database_connection, task_id)
+    user_id = params["id"]
+    old_submissions = list(Submission.get_by_user_and_task(database_connection, user_id, task_id))
+    is_solved = any(submission.verdict == "Accepted" for submission in old_submissions)
+    user_answer = request.query_params["answer"]
+    true_answer = task.answer_key
+    verdict = "Accepted" if user_answer == true_answer else "Wrong answer"
+    submission = Submission(user_id, task_id, verdict, datetime.datetime.now(), user_answer)
+    submission.flush(database_connection)
+    if is_solved or verdict != "Accepted":
         return RedirectResponse(f"/tasks/{task_id}")
-    except Exception:
-        return RedirectResponse("/archive")
+    user = User.pull_from_database(database_connection, user_id)
+    user.update_rating(task.difficulty)
+    user.flush(database_connection)
+    return RedirectResponse(f"/tasks/{task_id}")
+    #except Exception:
+    #    return RedirectResponse("/archive")
 
 
 @app.get("/submissions/{task_id}")

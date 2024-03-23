@@ -33,14 +33,15 @@ class Submission:
         connection.commit()
 
     @staticmethod
-    def get_by_user_and_task(connection, user_id, task_id, count):
+    def get_by_user_and_task(connection, user_id, task_id, count=None):
         cursor = connection.cursor()
         cursor.execute("""
                        SELECT user_id, task_id, verdict, time, solution FROM Submissions WHERE user_id = ? AND task_id = ? ORDER BY time DESC 
                        """,
                        [user_id, task_id])
+        gen = cursor.fetchmany(count) if count else cursor.fetchall()
 
-        for submission in cursor.fetchmany(count):
+        for submission in gen:
             yield Submission(*submission)
 
 
