@@ -223,13 +223,15 @@ async def add_task(name: Optional[str] = Form(None), description: Optional[str] 
                    difficulty: Optional[int] = Form(None), answer_key: Optional[str] = Form(None),
                    file: UploadFile = None):
 
-    if name is None or description is None or difficulty is None or answer_key is None or file is None:
+    if name is None or description is None or difficulty is None or answer_key is None:
         return RedirectResponse("/moder_panel", status_code=303)
 
-    up_file = open("task_files/" + file.filename, "wb")
-    up_file.write(file.file.read())
-    file.file.close()
-    up_file.close()
+    if file.filename:
+        up_file = open("task_files/" + file.filename, "wb")
+        up_file.write(file.file.read())
+        file.file.close()
+        up_file.close()
+        filename = file.filename
 
     Task(0, name, description, difficulty, answer_key, file.filename).flush(database_connection)
 
