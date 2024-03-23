@@ -14,7 +14,7 @@ def create_tables(connection):
         "CREATE TABLE IF NOT EXISTS Submissions(id INTEGER PRIMARY KEY, user_id INTEGER, task_id INTEGER, "
         "verdict TEXT, time DATE, solution TEXT)")
     cursor.execute(
-        "CREATE TABLE IF NOT EXISTS Permissions(id INTEGER PRIMARY KEY, user_id INTEGER, permission_level INTEGER)")
+        "CREATE TABLE IF NOT EXISTS Permissions(id INTEGER PRIMARY KEY, user_id INTEGER UNIQUE, permission_level INTEGER)")
     connection.commit()
 
 
@@ -38,7 +38,8 @@ class Submission:
     def get_by_user_and_task(connection, user_id, task_id, count=None):
         cursor = connection.cursor()
         cursor.execute("""
-                       SELECT user_id, task_id, verdict, time, solution FROM Submissions WHERE user_id = ? AND task_id = ? ORDER BY time DESC 
+                       SELECT user_id, task_id, verdict, time, solution FROM Submissions WHERE user_id = ? 
+                       AND task_id = ? ORDER BY time DESC 
                        """,
                        [user_id, task_id])
         gen = cursor.fetchmany(count) if count else cursor.fetchall()
@@ -70,19 +71,21 @@ class User:
     def set_permission(self, permission, connection):
         cursor = connection.cursor()
         cursor.execute("""
-                      REPLACE INTO Permissions(user_id, permission_level) VALUES (?, ?) 
+                      INSERT or REPLACE INTO Permissions(user_id, permission_level) VALUES 
+                      (?, ?)
                       """,
                        [self.id, permission])
         connection.commit()
 
     @staticmethod
-    def get_top(connection, count):
+    def get_top(connection, count=None):
         cursor = connection.cursor()
         cursor.execute("""
                        SELECT id, name, rating, email, avatar FROM Users ORDER BY rating DESC
                        """)
 
-        for user in cursor.fetchmany(count):
+        gen = cursor.fetchmany(count) if not (count is None) else cursor.fetchall()
+        for user in gen:
             yield User(*user)
 
     @staticmethod

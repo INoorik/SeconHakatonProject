@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель администратора - CTF</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+{% include 'html/login_container.html' %}
+{% include 'html/top_bar.html' %}
+
+<table class="top table">
+  <caption>
+    Users
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">N</th>
+      <th scope="col">Name</th>
+      <th scope="col">Permission level</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user, permission in users %}
+    <tr>
+          <th scope="row">{{loop.index}}</th>
+          <td><a href="users/{{user.id}}">{{user.name}}</a></td>
+          <td>
+            <form action="/permission_edit/{{user.id}}" method="post">
+              <input name="permission_level" type="number" min="0" max="2" value="{{permission}}">
+              <input name="" type="submit" class = "submit" value="Send">
+            </form>
+          </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+</body>
+</html>

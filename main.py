@@ -218,6 +218,25 @@ async def moder_panel(request: Request):
     return templates.TemplateResponse("html/moder_panel.html", params)
 
 
+@app.get("/admin_panel")
+async def admin_panel(request: Request):
+    params = get_user(request)
+    if params["permission"] < 2:
+        return RedirectResponse("/")
+
+    params["current"] = "Admin panel"
+    params["users"] = list(map(lambda x: [x, User.get_permission(x.id, database_connection)],
+                               User.get_top(database_connection)))
+    return templates.TemplateResponse("html/admin_panel.html", params)
+
+
+@app.post("/permission_edit/{id}")
+async def permission_edit(id, permission_level: Optional[int] = Form(None)):
+    print(id, permission_level)
+    User(id, *([""] * 4)).set_permission(permission_level, database_connection)
+    return RedirectResponse("/admin_panel", status_code=303)
+
+
 @app.post("/add_task")
 async def add_task(name: Optional[str] = Form(None), description: Optional[str] = Form(None),
                    difficulty: Optional[int] = Form(None), answer_key: Optional[str] = Form(None),

@@ -7,5 +7,10 @@
 		{% if permission > 0 %}
 		<li class="{% if current == 'Model panel' %} active-menu-tab {% endif %}"><a href="/moder_panel">Add Task</a></li>
 		{% endif %}
+		{% if permission > 1 %}
+		<li class="{% if current == 'Admin panel' %} active-menu-tab {% endif %}">
+			<a href="/admin_panel">Permission edit</a>
+		</li>
+		{% endif %}
 	</ul>
 </div>
