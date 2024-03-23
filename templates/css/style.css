@@ -31,7 +31,6 @@ ul.menu-list li{
 	font-size: 16px;
 	line-height: 20px;
 	text-align: left;
-	border-top: 7px solid white;
 }
 .table tbody td {
 	padding: 10px;
@@ -53,7 +52,7 @@ a{
 }
 
 .menu-container {
-	width: 100%;
+	width: 90%;
 	height: 30;
 	margin-top: 20px;
 	margin-bottom: 20px;
