@@ -99,6 +99,7 @@ async def top(request: Request):
 @app.get("/register")
 async def register(request: Request):
     params = get_user(request)
+    params["current"] = "Home"
     return templates.TemplateResponse("html/register.html", params)
 
 
@@ -116,6 +117,7 @@ async def save_user(request: Request):
 @app.get("/archive")
 async def archive(request: Request):
     params = get_user(request)
+    params["current"] = "Tasks"
     params["tasks"] = list(itertools.islice(Task.get_all(database_connection), 5))
 
     return templates.TemplateResponse("html/archive.html", params)
@@ -125,6 +127,7 @@ async def archive(request: Request):
 async def task(request: Request, task_id):
     params = get_user(request)
     task = Task.pull_from_database(database_connection, task_id)
+    params["current"] = "Tasks"
     params["task"] = task
     params["submissions"] = Submission.get_by_user_and_task(database_connection, params["id"], task.id, 10)
     return templates.TemplateResponse("html/task.html", params)
