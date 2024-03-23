@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from database_api import database_connection, Task, User, Submission
 from yandexid import *
 import itertools
@@ -140,3 +141,5 @@ async def submit_solution(request: Request, task_id):
     submission = Submission(user_id, task_id, verdict, datetime.datetime.now(), user_answer)
     submission.flush(database_connection)
     return RedirectResponse(f"/tasks/{task_id}")
+
+app.mount("/css", StaticFiles(directory="templates/css"), "css")

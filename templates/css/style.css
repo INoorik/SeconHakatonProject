@@ -1,0 +1,45 @@
+@font-face {
+	font-family: BigBlueTerminal;
+	src: url(../css/font.ttf);
+}
+
+body {
+	background-color: black;
+	background-image: radial-gradient(
+		rgba(0, 0, 50, 0.75), black 120%
+	);
+	height: 100vh;
+	color: white;
+	font: 1.3rem BigBlueTerminal, monospace;
+	text-align: center;
+}
+
+ul.menu-list li{
+	display: inline;
+	list-style: none;
+	margin-right: 15px;
+}
+
+.table thead th {
+	padding: 10px;
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 20px;
+	text-align: left;
+	border-top: 7px solid white;
+}
+.table tbody td {
+	padding: 10px;
+	font-size: 14px;
+	line-height: 20px;
+	border-top: 5px solid white;
+}
+
+.menu-container a{
+	color: white;
+	text-decoration: none;
+}
+
+.active-menu-tab a{
+	text-decoration: underline;
+}
