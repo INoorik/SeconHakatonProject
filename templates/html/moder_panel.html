@@ -12,10 +12,10 @@
 
 <div>
     <form action="/add_task" enctype="multipart/form-data" method="post">
-        Name: <input type="text" name="name">
-        Description: <input type="text" name="description">
+        Name: <input type="text" name="name" value="">
+        Description: <input type="text" name="description" value="">
         Difficulty: <input type="number" name="difficulty" min="0">
-        Answer key: <input type="text" name="answer_key">
+        Answer key: <input type="text" name="answer_key" value="">
         File: <label for="file-upload" class="submit">Upload</label>
         <input type="file" name="file" id="file-upload" multiple class="file">
 	    <input type="submit" name = "submit" value="Send" class="submit">

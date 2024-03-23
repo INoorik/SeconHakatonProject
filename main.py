@@ -1,21 +1,13 @@
 from fastapi import FastAPI, Request, Response, UploadFile, Form
 from typing_extensions import Annotated
+from typing import Optional
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
-from starlette.responses import FileResponse
 from database_api import database_connection, Task, User, Submission
 from yandexid import *
 import itertools
 import datetime
-from typing import Dict, Any
-
-class Item(BaseModel):
-    name: str
-    description: str
-    difficulty: int
-    answer: str
 
 
 app = FastAPI()
@@ -227,8 +219,13 @@ async def moder_panel(request: Request):
 
 
 @app.post("/add_task")
-async def add_task(name: Annotated[str, Form()], description: Annotated[str, Form()],
-                   difficulty: Annotated[int, Form()], answer_key: Annotated[str, Form()], file: UploadFile):
+async def add_task(name: Optional[str] = Form(None), description: Optional[str] = Form(None),
+                   difficulty: Optional[int] = Form(None), answer_key: Optional[str] = Form(None),
+                   file: UploadFile = None):
+
+    if name is None or description is None or difficulty is None or answer_key is None or file is None:
+        return RedirectResponse("/moder_panel", status_code=303)
+
     up_file = open("task_files/" + file.filename, "wb")
     up_file.write(file.file.read())
     file.file.close()
