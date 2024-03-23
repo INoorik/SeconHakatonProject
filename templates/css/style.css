@@ -23,6 +23,8 @@ ul.menu-list li{
 	background-color: black;
 	border: 5px solid white;
 	margin-left:auto; 
+	margin-top:20px;
+	margin-bottom:20px;
 	margin-right:auto;
 }
 
@@ -71,4 +73,12 @@ a{
 	text-decoration: none;
 	display: inline-block;
 	border: 2px solid white;
+}
+
+form {
+	margin: 20px;
+}
+
+.login-container {
+	text-align: right;
 }
