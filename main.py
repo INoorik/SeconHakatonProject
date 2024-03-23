@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, Response
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from starlette.responses import FileResponse
 from database_api import database_connection, Task, User, Submission
 from yandexid import *
 import itertools
@@ -54,12 +55,12 @@ async def main_page(request: Request):
     if user.is_exist(database_connection):
         user = User.pull_from_database(database_connection, params["id"])
         params["rating"] = user.rating
+        params["name"] = params["login_name"]
+        submissions = list(user.get_submissions(database_connection, 10))
+        tasks = [Task.pull_from_database(database_connection, submission.task_id) for submission in submissions]
+        params["tasks_and_submissions"] = list(zip(tasks, submissions))
 
-    params["name"] = params["login_name"]
     params["current"] = "Home"
-    submissions = list(user.get_submissions(database_connection))
-    tasks = [Task.pull_from_database(database_connection, submission.task_id) for submission in submissions]
-    params["tasks_and_submissions"] = list(zip(tasks, submissions))
     return templates.TemplateResponse("html/main.html", params)
 
 
@@ -75,7 +76,7 @@ async def users(id, request: Request):
     params["name"] = user.name
     params["avatar"] = user.avatar
     params["current"] = "Not Home"
-    submissions = list(user.get_submissions(database_connection))
+    submissions = list(user.get_submissions(database_connection, 10))
     tasks = [Task.pull_from_database(database_connection, submission.task_id) for submission in submissions]
     params["tasks_and_submissions"] = list(zip(tasks, submissions))
     return templates.TemplateResponse("html/main.html", params)
@@ -192,4 +193,6 @@ async def submissions(request: Request, task_id):
     except Exception:
         return RedirectResponse("/")
 
+
 app.mount("/css", StaticFiles(directory="templates/css"), "css")
+app.mount("/task_files", StaticFiles(directory="task_files"), "task_files")

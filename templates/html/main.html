@@ -23,7 +23,6 @@
 				{% endif %}
 			</div>
 		</div>
-		{% endif %}
 
 		<table class="submissions table">
 			<caption>
@@ -38,12 +37,15 @@
 			<tbody>
 				{% for task, submission in tasks_and_submissions %}
 				<tr>
-					<td><a href="/tasks/{{task.id}}"></a>{{task.name}}</td>
+					<td><a href="/tasks/{{task.id}}">{{task.name}}</a></td>
 					<td>{{submission.verdict}}</td>
 				</tr>
 				{% endfor %}
 			</tbody>
 		</table>
+		{% else %}
+		<div>Login for seeing your personal page</div>
+		{% endif %}
 
 	</body>
 </html>
