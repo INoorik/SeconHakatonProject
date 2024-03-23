@@ -50,11 +50,16 @@ def get_user(request):
 @app.get("/")
 async def main_page(request: Request):
     params = get_user(request)
-    if User(params["id"], "", 0, "", "").is_exist(database_connection):
-        params["rating"] = User.pull_from_database(database_connection, params["id"]).rating
+    user = User(params["id"], "", 0, "", "")
+    if user.is_exist(database_connection):
+        user = User.pull_from_database(database_connection, params["id"])
+        params["rating"] = user.rating
 
     params["name"] = params["login_name"]
     params["current"] = "Home"
+    submissions = list(user.get_submissions(database_connection))
+    tasks = [Task.pull_from_database(database_connection, submission.task_id) for submission in submissions]
+    params["tasks_and_submissions"] = list(zip(tasks, submissions))
     return templates.TemplateResponse("html/main.html", params)
 
 
@@ -70,9 +75,9 @@ async def users(id, request: Request):
     params["name"] = user.name
     params["avatar"] = user.avatar
     params["current"] = "Not Home"
-    submissions = user.get_submissions(database_connection)
+    submissions = list(user.get_submissions(database_connection))
     tasks = [Task.pull_from_database(database_connection, submission.task_id) for submission in submissions]
-    params["tasks_ans_submissions"] = zip(tasks, submissions)
+    params["tasks_and_submissions"] = list(zip(tasks, submissions))
     return templates.TemplateResponse("html/main.html", params)
 
 
