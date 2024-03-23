@@ -26,8 +26,8 @@ def get_user(request):
             login = user_data.login
             email = user_data.emails[0]
             phone = user_data.default_phone.number
-            avatar = user_data.default_avatar_id
-            if User(id, '', 0).is_exist(database_connection):
+            avatar = "https://avatars.yandex.net/get-yapic/" + user_data.default_avatar_id + "/islands-200"
+            if User(id, '', 0, "", "").is_exist(database_connection):
                 login = User.pull_from_database(database_connection, id).name
             else:
                 is_login = False
@@ -50,7 +50,9 @@ def get_user(request):
 @app.get("/")
 async def main_page(request: Request):
     params = get_user(request)
-    params["rating"] = User.pull_from_database(database_connection, params["id"]).rating
+    if User(params["id"], "", 0, "", "").is_exist(database_connection):
+        params["rating"] = User.pull_from_database(database_connection, params["id"]).rating
+
     params["current"] = "Home"
     return templates.TemplateResponse("html/main.html", params)
 
@@ -58,12 +60,14 @@ async def main_page(request: Request):
 @app.get("/users/{id}")
 async def main_page(id, request: Request):
     params = get_user(request)
-    print(params["id"])
-    print(id)
-    if str(id) == str(params["id"]):
+    if (str(id) == str(params["id"]) or
+            not User(id, "", 0, "", "").is_exist(database_connection)):
         return RedirectResponse("/")
 
-    params["rating"] = User.pull_from_database(database_connection, id).rating
+    user = User.pull_from_database(database_connection, id)
+    params["rating"] = user.rating
+    params["login_name"] = user.name
+    params["avatar"] = user.name
     params["current"] = "Not Home"
     return templates.TemplateResponse("html/main.html", params)
 
@@ -92,7 +96,7 @@ async def set_token(response: Response, request: Request):
 @app.get("/login")
 async def login(response: Response, request: Request):
     params = get_user(request)
-    user = User(params["id"], "", 0)
+    user = User(params["id"], "", 0, "", "")
     if user.is_exist(database_connection):
         response = RedirectResponse("/")
     else:
@@ -121,7 +125,7 @@ async def register(request: Request):
 async def save_user(request: Request):
     params = get_user(request)
     user_login = request.query_params["login"]
-    user = User(params["id"], user_login, 0)
+    user = User(params["id"], user_login, 0, params["email"], params["avatar"])
     if not user.is_exist(database_connection):
         user.flush(database_connection)
 

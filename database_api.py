@@ -5,7 +5,8 @@ database_connection = sqlite3.connect("database.sqlite")
 
 def create_tables(connection):
     cursor = connection.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY, name TEXT, rating INTEGER NOT NULL)")
+    cursor.execute("""CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY, name TEXT, 
+                      rating INTEGER NOT NULL, email TEXT, avatar TEXT)""")
     cursor.execute(
         "CREATE TABLE IF NOT EXISTS Tasks(id INTEGER PRIMARY KEY, name TEXT, description TEXT, difficulty INTEGER, "
         "answer_key TEXT, file TExT)")
@@ -44,16 +45,18 @@ class Submission:
 
 
 class User:
-    def __init__(self, id, name, rating):
+    def __init__(self, id, name, rating, email, avatar):
         self.id = id
         self.name = name
         self.rating = rating
+        self.email = email
+        self.avatar = avatar
 
     @staticmethod
     def get_top(connection, count):
         cursor = connection.cursor()
         cursor.execute("""
-                       SELECT id, name, rating FROM Users ORDER BY rating DESC
+                       SELECT id, name, rating, email, avatar FROM Users ORDER BY rating DESC
                        """)
 
         for user in cursor.fetchmany(count):
@@ -63,14 +66,13 @@ class User:
     def pull_from_database(connection, id):
         cursor = connection.cursor()
         cursor.execute("""
-                       SELECT rating, name FROM Users WHERE id=?
+                       SELECT name, rating, email, avatar FROM Users WHERE id=?
                        """,
                        [id])
         result = cursor.fetchone()
         if result is None:
             raise Exception("No such user")
-        rating, name = result
-        return User(id, name, rating)
+        return User(id, *result)
 
     def is_exist(self, connection):
         cursor = connection.cursor()
@@ -95,9 +97,9 @@ class User:
     def flush(self, connection):
         cursor = connection.cursor()
         cursor.execute("""
-                      REPLACE INTO Users(id, rating, name) VALUES (?, ?, ?) 
+                      REPLACE INTO Users(id, name, rating, email, avatar) VALUES (?, ?, ?, ?, ?) 
                       """,
-                       [self.id, self.rating, self.name])
+                       [self.id, self.name, self.rating, self.email, self.avatar])
         connection.commit()
 
 
