@@ -25,7 +25,7 @@
     {% for user in users %}
     <tr>
       <th scope="row">{{loop.index}}</th>
-      <td>{{user.name}}</td>
+      <td><a href="users/{{user.id}}">{{user.name}}</a></td>
       <td>{{user.rating}}</td>
     </tr>
     {% endfor %}

@@ -10,5 +10,19 @@
 {% include 'html/login_container.html' %}
 {% include 'html/top_bar.html' %}
 
+<div>
+    <div class="photo">
+        <img id="photo" src="https://avatars.yandex.net/get-yapic/{{avatar}}/islands-200">
+    </div>
+    <div>
+        <div>Name: {{login_name}}</div>
+        <div>Rating: {{rating}}</div>
+        <div>Email: {{email}}</div>
+        {% if current == "Home" %}
+        <div>Phone: {{phone}}</div>
+        {% endif %}
+    </div>
+</div>
+
 </body>
 </html>

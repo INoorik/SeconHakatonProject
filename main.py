@@ -50,7 +50,21 @@ def get_user(request):
 @app.get("/")
 async def main_page(request: Request):
     params = get_user(request)
+    params["rating"] = User.pull_from_database(database_connection, params["id"]).rating
     params["current"] = "Home"
+    return templates.TemplateResponse("html/main.html", params)
+
+
+@app.get("/users/{id}")
+async def main_page(id, request: Request):
+    params = get_user(request)
+    print(params["id"])
+    print(id)
+    if str(id) == str(params["id"]):
+        return RedirectResponse("/")
+
+    params["rating"] = User.pull_from_database(database_connection, id).rating
+    params["current"] = "Not Home"
     return templates.TemplateResponse("html/main.html", params)
 
 
@@ -144,7 +158,7 @@ async def submit_solution(request: Request, task_id):
         user_id = params["id"]
         user_answer = request.query_params["answer"]
         true_answer = task.answer_key
-        verdict = "Accepted" if user_answer==true_answer else "Wrong answer"
+        verdict = "Accepted" if user_answer == true_answer else "Wrong answer"
         submission = Submission(user_id, task_id, verdict, datetime.datetime.now(), user_answer)
         submission.flush(database_connection)
         return RedirectResponse(f"/tasks/{task_id}")
