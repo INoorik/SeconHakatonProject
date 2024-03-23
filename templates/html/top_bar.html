@@ -4,5 +4,8 @@
 		<li class="{% if current == 'Tasks' %} active-menu-tab {% endif %}"><a href="/archive">Tasks</a></li>
 		<li class="{% if current == 'Contests' %} active-menu-tab {% endif %}"><a href="#">Contests</a></li>
 		<li class="{% if current == 'Top' %} active-menu-tab {% endif %}"><a href="/top">Top</a></li>
+		{% if permission > 0 %}
+		<li class="{% if current == 'Model panel' %} active-menu-tab {% endif %}"><a href="/moder_panel">Add Task</a></li>
+		{% endif %}
 	</ul>
 </div>

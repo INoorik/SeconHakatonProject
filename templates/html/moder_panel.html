@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель модератора - CTF</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+{% include 'html/login_container.html' %}
+{% include 'html/top_bar.html' %}
+
+<div>
+    <form action="/add_task" enctype="multipart/form-data" method="post">
+        Name: <input type="text" name="name">
+        Description: <input type="text" name="description">
+        Difficulty: <input type="number" name="difficulty" min="0">
+        Answer key: <input type="text" name="answer_key">
+        File: <label for="file-upload" class="submit">Upload</label>
+        <input type="file" name="file" id="file-upload" multiple class="file">
+	    <input type="submit" name = "submit" value="Send" class="submit">
+    </form>
+</div>
+
+</body>
+</html>

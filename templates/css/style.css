@@ -82,3 +82,7 @@ form {
 .login-container {
 	text-align: right;
 }
+
+input[type="file"] {
+  display: none;
+}

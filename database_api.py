@@ -13,6 +13,8 @@ def create_tables(connection):
     cursor.execute(
         "CREATE TABLE IF NOT EXISTS Submissions(id INTEGER PRIMARY KEY, user_id INTEGER, task_id INTEGER, "
         "verdict TEXT, time DATE, solution TEXT)")
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS Permissions(id INTEGER PRIMARY KEY, user_id INTEGER, permission_level INTEGER)")
     connection.commit()
 
 
@@ -52,6 +54,26 @@ class User:
         self.rating = rating
         self.email = email
         self.avatar = avatar
+
+    @staticmethod
+    def get_permission(id, connection):
+        cursor = connection.cursor()
+        cursor.execute("""
+                       SELECT permission_level FROM Permissions WHERE user_id=?
+                       """,
+                       [id])
+        result = cursor.fetchone()
+        if result is None:
+            return 0
+        return result[0]
+
+    def set_permission(self, permission, connection):
+        cursor = connection.cursor()
+        cursor.execute("""
+                      REPLACE INTO Permissions(user_id, permission_level) VALUES (?, ?) 
+                      """,
+                       [self.id, permission])
+        connection.commit()
 
     @staticmethod
     def get_top(connection, count):

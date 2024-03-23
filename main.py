@@ -1,12 +1,22 @@
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request, Response, UploadFile, Form
+from typing_extensions import Annotated
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 from starlette.responses import FileResponse
 from database_api import database_connection, Task, User, Submission
 from yandexid import *
 import itertools
 import datetime
+from typing import Dict, Any
+
+class Item(BaseModel):
+    name: str
+    description: str
+    difficulty: int
+    answer: str
+
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -15,6 +25,7 @@ templates = Jinja2Templates(directory="templates")
 def get_user(request):
     cookie = request.cookies
     is_login = "token" in cookie
+    permission = 0
     login, email, phone, avatar, id = [""] * 5
     auth_url = "/"
 
@@ -30,6 +41,7 @@ def get_user(request):
             avatar = "https://avatars.yandex.net/get-yapic/" + user_data.default_avatar_id + "/islands-200"
             if User(id, '', 0, "", "").is_exist(database_connection):
                 login = User.pull_from_database(database_connection, id).name
+                permission = User.get_permission(id, database_connection)
             else:
                 is_login = False
 
@@ -44,7 +56,7 @@ def get_user(request):
         )
         auth_url = yandex_oauth.get_authorization_url()
 
-    return {"request": request, "login_name": login, "is_login": is_login,
+    return {"request": request, "login_name": login, "is_login": is_login, "permission": permission,
             "login_ref": auth_url, "email": email, "phone": phone, "avatar": avatar, "id": id}
 
 
@@ -84,7 +96,6 @@ async def users(id, request: Request):
     tasks = [Task.pull_from_database(database_connection, submission.task_id) for submission in submissions]
     params["tasks_and_submissions"] = list(zip(tasks, submissions))
     return templates.TemplateResponse("html/main.html", params)
-
 
 @app.get("/logout")
 async def logout():
@@ -203,6 +214,29 @@ async def submissions(request: Request, task_id):
         return templates.TemplateResponse("html/submissions.html", params)
     except Exception:
         return RedirectResponse("/")
+
+
+@app.get("/moder_panel")
+async def moder_panel(request: Request):
+    params = get_user(request)
+    if params["permission"] == 0:
+        return RedirectResponse("/")
+
+    params["current"] = "Model panel"
+    return templates.TemplateResponse("html/moder_panel.html", params)
+
+
+@app.post("/add_task")
+async def add_task(name: Annotated[str, Form()], description: Annotated[str, Form()],
+                   difficulty: Annotated[int, Form()], answer_key: Annotated[str, Form()], file: UploadFile):
+    up_file = open("task_files/" + file.filename, "wb")
+    up_file.write(file.file.read())
+    file.file.close()
+    up_file.close()
+
+    Task(0, name, description, difficulty, answer_key, file.filename).flush(database_connection)
+
+    return RedirectResponse("/archive", status_code=303)
 
 
 app.mount("/css", StaticFiles(directory="templates/css"), "css")
