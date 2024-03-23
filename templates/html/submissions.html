@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная - CTF</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+{% include 'html/login_container.html' %}
+{% include 'html/top_bar.html' %}
+
+
+<table class="submissions table">
+  <caption>
+	Latest submissions
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">User</th>
+      <th scope="col">Verdict</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user, submission in users_and_submissions %}
+    <tr>
+      <td><a href="/users/{{user.id}}">{{user.name}}</a></td>
+      <td>{{submission.verdict}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+</body>
+</html>

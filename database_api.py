@@ -120,13 +120,13 @@ class Task:
                        [self.id])
         return not (cursor.fetchone() is None)
 
-    def get_submissions(self, connection):
+    def get_submissions(self, connection, count):
         cursor = connection.cursor()
         cursor.execute("""
-                      SELECT user_id, task_id, verdict, time, solution FROM Submissions WHERE task_id=?
+                      SELECT user_id, task_id, verdict, time, solution FROM Submissions WHERE task_id=? ORDER BY time DESC
                       """,
                        [self.id])
-        for submission in cursor.fetchall():
+        for submission in cursor.fetchmany(count):
             yield Submission(*submission)
 
     @staticmethod

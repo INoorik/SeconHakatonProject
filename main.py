@@ -179,4 +179,16 @@ async def submit_solution(request: Request, task_id):
         return RedirectResponse("/archive")
 
 
+@app.get("/submissions/{task_id}")
+async def submissions(request: Request, task_id):
+    #try:
+        task = Task.pull_from_database(database_connection, task_id)
+        params = get_user(request)
+        submissions = list(task.get_submissions(database_connection, 10))
+        users = [User.pull_from_database(database_connection, sub.user_id) for sub in submissions]
+        params["users_and_submissions"] = list(zip(users, submissions))
+        return templates.TemplateResponse("html/submissions.html", params)
+    #except Exception:
+        #return RedirectResponse("/")
+
 app.mount("/css", StaticFiles(directory="templates/css"), "css")
