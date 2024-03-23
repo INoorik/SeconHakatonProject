@@ -1,29 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Главная - CTF</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
+	<head>
+		<meta charset="UTF-8">
+		<title>Главная - CTF</title>
+		<link rel="stylesheet" href="/css/style.css">
+	</head>
+	<body>
 
-{% include 'html/login_container.html' %}
-{% include 'html/top_bar.html' %}
+		{% include 'html/login_container.html' %}
+		{% include 'html/top_bar.html' %}
 
-{% if is_login %}
-<div>
-    <div class="photo">
-        <img id="photo" src="{{avatar}}">
-    </div>
-    <div>
-        <div>Name: {{name}}</div>
-        <div>Rating: {{rating}}</div>
-        {% if current == "Home" %}
-        <div>Email: {{email}}</div>
-        {% endif %}
-    </div>
-</div>
-{% endif %}
+		{% if is_login %}
+		<div>
+			<div class="photo">
+				<img id="photo" src="{{avatar}}">
+			</div>
+			<div>
+				<div>Name: {{name}}</div>
+				<div>Rating: {{rating}}</div>
+				{% if current == "Home" %}
+				<div>Email: {{email}}</div>
+				{% endif %}
+			</div>
+		</div>
+		{% endif %}
 
-</body>
+		<table class="submissions table">
+			<caption>
+				Submissions
+			</caption>
+			<thead>
+				<tr>
+					<th scope="col">Task</th>
+					<th scope="col">Verdict</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for task, submission in tasks_and_submissions %}
+				<tr>
+					<td><a href="/tasks/{{task.id}}"></a>{{task.name}}</td>
+					<td>{{submission.verdict}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	</body>
 </html>

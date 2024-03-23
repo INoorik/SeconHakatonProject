@@ -70,6 +70,9 @@ async def users(id, request: Request):
     params["name"] = user.name
     params["avatar"] = user.avatar
     params["current"] = "Not Home"
+    submissions = user.get_submissions(database_connection)
+    tasks = [Task.pull_from_database(database_connection, submission.task_id) for submission in submissions]
+    params["tasks_ans_submissions"] = zip(tasks, submissions)
     return templates.TemplateResponse("html/main.html", params)
 
 
