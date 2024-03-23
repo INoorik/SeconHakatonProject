@@ -126,23 +126,30 @@ async def archive(request: Request):
 @app.get("/tasks/{task_id}")
 async def task(request: Request, task_id):
     params = get_user(request)
-    task = Task.pull_from_database(database_connection, task_id)
-    params["current"] = "Tasks"
-    params["task"] = task
-    params["submissions"] = Submission.get_by_user_and_task(database_connection, params["id"], task.id, 10)
-    return templates.TemplateResponse("html/task.html", params)
+    try:
+        task = Task.pull_from_database(database_connection, task_id)
+        params["current"] = "Tasks"
+        params["task"] = task
+        params["submissions"] = Submission.get_by_user_and_task(database_connection, params["id"], task.id, 10)
+        return templates.TemplateResponse("html/task.html", params)
+    except Exception:
+        return RedirectResponse("/archive")
 
 
 @app.get("/submit_solution/{task_id}")
 async def submit_solution(request: Request, task_id):
     params = get_user(request)
-    task = Task.pull_from_database(database_connection, task_id)
-    user_id = params["id"]
-    user_answer = request.query_params["answer"]
-    true_answer = task.answer_key
-    verdict = "Accepted" if user_answer==true_answer else "Wrong answer"
-    submission = Submission(user_id, task_id, verdict, datetime.datetime.now(), user_answer)
-    submission.flush(database_connection)
-    return RedirectResponse(f"/tasks/{task_id}")
+    try:
+        task = Task.pull_from_database(database_connection, task_id)
+        user_id = params["id"]
+        user_answer = request.query_params["answer"]
+        true_answer = task.answer_key
+        verdict = "Accepted" if user_answer==true_answer else "Wrong answer"
+        submission = Submission(user_id, task_id, verdict, datetime.datetime.now(), user_answer)
+        submission.flush(database_connection)
+        return RedirectResponse(f"/tasks/{task_id}")
+    except Exception:
+        return RedirectResponse("/archive")
+
 
 app.mount("/css", StaticFiles(directory="templates/css"), "css")

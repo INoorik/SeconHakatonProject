@@ -110,6 +110,14 @@ class Task:
         self.answer_key = answer_key
         self.file = file
 
+    def is_exist(self, connection):
+        cursor = connection.cursor()
+        cursor.execute("""
+                       SELECT id FROM Tasks WHERE id=?
+                       """,
+                       [self.id])
+        return not (cursor.fetchone() is None)
+
     def get_submissions(self, connection):
         cursor = connection.cursor()
         cursor.execute("""
