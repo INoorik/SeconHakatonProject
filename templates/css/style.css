@@ -60,3 +60,14 @@ a{
 	border: 5px solid white;
 	background-color: black;
 }
+
+.submit {
+	background-color: black; 
+	border: none;
+	color: white;
+	padding: 12 32px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	border: 2px solid white;
+}

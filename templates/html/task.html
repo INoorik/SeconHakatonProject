@@ -18,7 +18,7 @@
 {% if is_login %}
 <form action="/submit_solution/{{task.id}}" method="get">
 	<input type="text" name="answer">
-	<input type="submit" value="Send">
+	<input type="submit" class = "submit" value="Send">
 </form>
 <a href="/submissions/{{task.id}}">Watch all submissions</a>
 <table class="submissions table">
