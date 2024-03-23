@@ -36,10 +36,13 @@ ul.menu-list li{
 }
 
 .menu-container a{
-	color: white;
 	text-decoration: none;
 }
 
 .active-menu-tab a{
 	text-decoration: underline;
+}
+
+a{
+	color: white;
 }
