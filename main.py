@@ -245,7 +245,6 @@ async def permission_edit(request: Request, id, permission_level: Optional[int] 
     if params["permission"] < 2:
         return RedirectResponse("/")
 
-    print(id, permission_level)
     User(id, "", 0, "", "").set_permission(permission_level, database_connection)
     return RedirectResponse("/admin_panel", status_code=303)
 
