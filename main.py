@@ -242,7 +242,7 @@ async def permission_edit(request: Request, id, permission_level: Optional[int] 
         return RedirectResponse("/")
 
     print(id, permission_level)
-    User(id, *([""] * 4)).set_permission(permission_level, database_connection)
+    User(id, "", 0, "", "").set_permission(permission_level, database_connection)
     return RedirectResponse("/admin_panel", status_code=303)
 
 
