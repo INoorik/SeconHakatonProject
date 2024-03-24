@@ -73,6 +73,7 @@ a{
 	text-decoration: none;
 	display: inline-block;
 	border: 2px solid white;
+	font: 1.3rem BigBlueTerminal, monospace;
 }
 
 form {

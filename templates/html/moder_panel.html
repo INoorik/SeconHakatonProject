@@ -10,15 +10,21 @@
 {% include 'html/login_container.html' %}
 {% include 'html/top_bar.html' %}
 
-<div>
+<div style="margin-top: 10%; margin-left: 40%; text-align: left">
     <form action="/add_task" enctype="multipart/form-data" method="post">
-        Name: <input type="text" name="name" value="">
-        Description: <input type="text" name="description" value="">
-        Difficulty: <input type="number" name="difficulty" min="0">
-        Answer key: <input type="text" name="answer_key" value="">
-        File: <label for="file-upload" class="submit">Upload</label>
+        Name: <br><input type="text" name="name" value="">
+        <br>
+        Description: <br><textarea name="description" cols="40" rows="5"></textarea>
+        <br>
+        Difficulty: <br><input type="number" name="difficulty" min="0">
+        <br>
+        Answer key: <br><input type="text" name="answer_key" value="">
+        <br>
+        File: <br><label for="file-upload" class="submit">Upload</label>
+        <br>
         <input type="file" name="file" id="file-upload" multiple class="file">
-	    <input type="submit" name = "submit" value="Send" class="submit">
+        <br>
+	    <input style="width: 40%; height: 50px" type="submit" name = "submit" value="Send" class="submit">
     </form>
 </div>
 
