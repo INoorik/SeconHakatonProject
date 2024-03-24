@@ -7,9 +7,9 @@ int main() {
 	std::string user_input;
 	std::cin>>user_input;
 	if(check_flag(user_input))
-		std::cout<<"Congratulations, you have successfully solve this problem!"<<std::endl;
+		std::cout<<"Congratulations, you're logging in the Death Star I secret server. [BIG RED SELF DESTROY BUTTON]"<<std::endl;
 	else
-		std::cout<<"Sorry, you have failed to solve this problem"<<std::endl;
+		std::cout<<"Im calling the Palpatin"<<std::endl;
 }
 
 bool check_flag(std::string flag) {
