@@ -9,12 +9,13 @@ def create_tables(connection):
                       rating INTEGER NOT NULL, email TEXT, avatar TEXT)""")
     cursor.execute(
         "CREATE TABLE IF NOT EXISTS Tasks(id INTEGER PRIMARY KEY, name TEXT, description TEXT, difficulty INTEGER, "
-        "answer_key TEXT, file TExT)")
+        "answer_key TEXT, file TEXT)")
     cursor.execute(
         "CREATE TABLE IF NOT EXISTS Submissions(id INTEGER PRIMARY KEY, user_id INTEGER, task_id INTEGER, "
         "verdict TEXT, time DATE, solution TEXT)")
     cursor.execute(
-        "CREATE TABLE IF NOT EXISTS Permissions(id INTEGER PRIMARY KEY, user_id INTEGER UNIQUE, permission_level INTEGER)")
+        "CREATE TABLE IF NOT EXISTS Permissions(id INTEGER PRIMARY KEY, "
+        "user_id INTEGER UNIQUE, permission_level INTEGER)")
     connection.commit()
 
 

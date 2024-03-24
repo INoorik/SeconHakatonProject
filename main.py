@@ -231,16 +231,23 @@ async def admin_panel(request: Request):
 
 
 @app.post("/permission_edit/{id}")
-async def permission_edit(id, permission_level: Optional[int] = Form(None)):
+async def permission_edit(request: Request, id, permission_level: Optional[int] = Form(None)):
+    params = get_user(request)
+    if params["permission"] < 2:
+        return RedirectResponse("/")
+
     print(id, permission_level)
     User(id, *([""] * 4)).set_permission(permission_level, database_connection)
     return RedirectResponse("/admin_panel", status_code=303)
 
 
 @app.post("/add_task")
-async def add_task(name: Optional[str] = Form(None), description: Optional[str] = Form(None),
+async def add_task(request: Request, name: Optional[str] = Form(None), description: Optional[str] = Form(None),
                    difficulty: Optional[int] = Form(None), answer_key: Optional[str] = Form(None),
                    file: UploadFile = None):
+    params = get_user(request)
+    if params["permission"] == 0:
+        return RedirectResponse("/")
 
     if name is None or description is None or difficulty is None or answer_key is None:
         return RedirectResponse("/moder_panel", status_code=303)
