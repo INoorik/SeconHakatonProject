@@ -74,6 +74,7 @@ async def main_page(request: Request):
     else:
         params["show"] = False
 
+    params["user_color"] = params["color"]
     params["current"] = "Home"
     return templates.TemplateResponse("html/main.html", params)
 
@@ -245,7 +246,7 @@ async def permission_edit(request: Request, id, permission_level: Optional[int] 
         return RedirectResponse("/")
 
     print(id, permission_level)
-    User(id, *([""] * 4)).set_permission(permission_level, database_connection)
+    User(id, "", 0, "", "").set_permission(permission_level, database_connection)
     return RedirectResponse("/admin_panel", status_code=303)
 
 
