@@ -20,6 +20,7 @@ def get_user(request):
     permission = 0
     login, email, phone, avatar, id = [""] * 5
     auth_url = "/"
+    color = "silver"
 
     try:
         if is_login:
@@ -31,9 +32,12 @@ def get_user(request):
             email = user_data.emails[0]
             phone = user_data.default_phone.number
             avatar = "https://avatars.yandex.net/get-yapic/" + user_data.default_avatar_id + "/islands-200"
-            if User(id, '', 0, "", "").is_exist(database_connection):
-                login = User.pull_from_database(database_connection, id).name
+            user = User(id, '', 0, "", "")
+            if user.is_exist(database_connection):
+                user = User.pull_from_database(database_connection, id)
+                login = user.name
                 permission = User.get_permission(id, database_connection)
+                color = user.color_by_rating(user.rating)
             else:
                 is_login = False
 
@@ -49,7 +53,7 @@ def get_user(request):
         auth_url = yandex_oauth.get_authorization_url()
 
     return {"request": request, "login_name": login, "is_login": is_login, "permission": permission,
-            "login_ref": auth_url, "email": email, "phone": phone, "avatar": avatar, "id": id}
+            "login_ref": auth_url, "email": email, "phone": phone, "avatar": avatar, "id": id, "color": color}
 
 
 @app.get("/")
@@ -83,6 +87,7 @@ async def users(id, request: Request):
     params["rating"] = user.rating
     params["name"] = user.name
     params["avatar"] = user.avatar
+    params["color"] = user.color_by_rating(user.rating)
     params["current"] = "Not Home"
     submissions = list(user.get_submissions(database_connection, 10))
     tasks = [Task.pull_from_database(database_connection, submission.task_id) for submission in submissions]
