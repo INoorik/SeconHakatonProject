@@ -8,9 +8,9 @@ int main() {
 	char user_input[100];
 	fgets(user_input, 100, stdin);
 	if(check_flag(user_input))
-		std::cout<<"Congratulations, you have successfully solve this problem!"<<std::endl;
+		std::cout<<<"Congratulations, you're logging in the Death Star II secret server. Again. [BIG RED SELF DESTROY BUTTON]"<std::endl;
 	else
-		std::cout<<"Sorry, you have failed to solve this problem"<<std::endl;
+		std::cout<<"Im calling the Palpatine"<<std::endl;
 }
 
 bool check_flag(char *flag) {

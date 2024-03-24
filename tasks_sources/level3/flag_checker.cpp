@@ -9,7 +9,7 @@ int main() {
 	if(check_flag(user_input))
 		std::cout<<"Congratulations, you're logging in the Death Star I secret server. [BIG RED SELF DESTROY BUTTON]"<<std::endl;
 	else
-		std::cout<<"Im calling the Palpatin"<<std::endl;
+		std::cout<<"Im calling the Palpatine"<<std::endl;
 }
 
 bool check_flag(std::string flag) {
