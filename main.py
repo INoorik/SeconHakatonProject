@@ -262,7 +262,6 @@ async def add_task(request: Request, name: Optional[str] = Form(None), descripti
         up_file.write(file.file.read())
         file.file.close()
         up_file.close()
-        filename = file.filename
 
     Task(0, name, description, difficulty, answer_key, file.filename).flush(database_connection)
 
