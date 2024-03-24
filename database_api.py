@@ -56,6 +56,21 @@ class User:
         self.rating = rating
         self.email = email
         self.avatar = avatar
+        self.color = self.color_by_rating(rating)
+
+    @staticmethod
+    def color_by_rating(rating):
+        if rating == 0:
+            return "silver"
+        if rating < 10:
+            return "white"
+        if rating < 20:
+            return "limegreen"
+        if rating < 30:
+            return "orangered"
+        if rating < 40:
+            return "darkmagenta"
+        return "red"
 
     @staticmethod
     def get_permission(id, connection):
@@ -120,6 +135,7 @@ class User:
 
     def update_rating(self, delta):
         self.rating += delta
+        self.color = self.color_by_rating(self.rating)
 
     def flush(self, connection):
         cursor = connection.cursor()
