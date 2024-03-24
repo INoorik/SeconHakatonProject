@@ -71,6 +71,7 @@ async def main_page(request: Request):
     else:
         params["show"] = False
 
+    params["user_color"] = params["color"]
     params["current"] = "Home"
     return templates.TemplateResponse("html/main.html", params)
 
