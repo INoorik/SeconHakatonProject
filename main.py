@@ -29,7 +29,10 @@ def get_user(request):
             user_data = yandex_id.get_user_info_json()
             id = user_data.id
             login = user_data.login
-            email = user_data.emails[0]
+            if len(user_data.emails) > 0:
+                email = user_data.emails[0]
+            else:
+                email = "unknown"
             phone = user_data.default_phone.number
             avatar = "https://avatars.yandex.net/get-yapic/" + user_data.default_avatar_id + "/islands-200"
             user = User(id, '', 0, "", "")
