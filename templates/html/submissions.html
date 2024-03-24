@@ -25,7 +25,8 @@
 				{% for user, submission in users_and_submissions %}
 				<tr>
 					<td><a style="color: {{user.color}}" href="/users/{{user.id}}">{{user.name}}</a></td>
-					<td>{{submission.verdict}}</td>
+					<td style="color: {% if submission.verdict == 'Accepted' %}
+					green {% else %} red {% endif %}">{{submission.verdict}}</td>
 				</tr>
 				{% endfor %}
 			</tbody>

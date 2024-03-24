@@ -37,7 +37,8 @@
     {% for submission in submissions %}
     <tr>
       <td>{{submission.solution}}</td>
-      <td>{{submission.verdict}}</td>
+      <td style="color: {% if submission.verdict == 'Accepted' %}
+					green {% else %} red {% endif %}">{{submission.verdict}}</td>
     </tr>
     {% endfor %}
   </tbody>

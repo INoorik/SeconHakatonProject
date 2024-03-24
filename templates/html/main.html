@@ -38,7 +38,8 @@
 				{% for task, submission in tasks_and_submissions %}
 				<tr>
 					<td><a href="/tasks/{{task.id}}">{{task.name}}</a></td>
-					<td>{{submission.verdict}}</td>
+					<td style="color: {% if submission.verdict == 'Accepted' %}
+					green {% else %} red {% endif %}">{{submission.verdict}}</td>
 				</tr>
 				{% endfor %}
 			</tbody>
