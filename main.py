@@ -87,7 +87,7 @@ async def users(id, request: Request):
     params["rating"] = user.rating
     params["name"] = user.name
     params["avatar"] = user.avatar
-    params["color"] = user.color_by_rating(user.rating)
+    params["user_color"] = user.color_by_rating(user.rating)
     params["current"] = "Not Home"
     submissions = list(user.get_submissions(database_connection, 10))
     tasks = [Task.pull_from_database(database_connection, submission.task_id) for submission in submissions]
