@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Главная - CTF</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body>
+	<head>
+		<meta charset="UTF-8">
+		<title>Главная - CTF</title>
+		<link rel="stylesheet" href="../css/style.css">
+	</head>
+	<body>
 
-{% include 'html/login_container.html' %}
-{% include 'html/top_bar.html' %}
+		{% include 'html/login_container.html' %}
+		{% include 'html/top_bar.html' %}
 
-<a href="/tasks/{{task_id}}">Back to the task</a>
-<table class="submissions table">
-  <caption>
-	Latest submissions
-  </caption>
-  <thead>
-    <tr>
-      <th scope="col">User</th>
-      <th scope="col">Verdict</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for user, submission in users_and_submissions %}
-    <tr>
-      <td><a href="/users/{{user.id}}">{{user.name}}</a></td>
-      <td>{{submission.verdict}}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+		<a href="/tasks/{{task_id}}">Back to the task</a>
+		<table class="submissions table">
+			<caption>
+				Latest submissions
+			</caption>
+			<thead>
+				<tr>
+					<th scope="col">User</th>
+					<th scope="col">Verdict</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for user, submission in users_and_submissions %}
+				<tr>
+					<td><a style="color: {{user.color}}" href="/users/{{user.id}}">{{user.name}}</a></td>
+					<td>{{submission.verdict}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
 
 
-</body>
+	</body>
 </html>

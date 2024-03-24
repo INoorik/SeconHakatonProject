@@ -9,7 +9,7 @@ body {
 		rgba(0, 0, 50, 0.75), black 120%
 	);
 	height: 100vh;
-	color: white;
+	color: silver;
 	font: 1.3rem BigBlueTerminal, monospace;
 	text-align: center;
 }
