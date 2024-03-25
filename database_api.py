@@ -225,6 +225,8 @@ class Task:
             yield Task(*task)
 
     def flush(self, connection):
+        if self.id == 0:
+            self.id = "NULL"
         cursor = connection.cursor()
         cursor.execute("""
                       REPLACE INTO Tasks(id, name, description, difficulty, answer_key, file) VALUES (?, ?, ?, ?, ?, ?) 
