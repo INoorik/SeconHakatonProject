@@ -1,5 +1,4 @@
 import uvicorn
-from main import app as fastapi_app
 from database_api import create_tables, database_connection
 
 if __name__ == "__main__":
