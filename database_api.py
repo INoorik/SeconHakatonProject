@@ -16,6 +16,9 @@ def create_tables(connection):
     cursor.execute(
         "CREATE TABLE IF NOT EXISTS Permissions(id INTEGER PRIMARY KEY, "
         "user_id INTEGER UNIQUE, permission_level INTEGER)")
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS Tags(id INTEGER PRIMARY KEY, task_id INTEGER,"
+        "tag_name TEXT)")
     connection.commit()
 
 
@@ -147,13 +150,39 @@ class User:
 
 
 class Task:
-    def __init__(self, id, name, description, difficulty, answer_key, file):
+    def __init__(self, id, name, description, difficulty, answer_key, file, tags=[]):
         self.id = id
         self.name = name
         self.description = description
         self.difficulty = difficulty
         self.answer_key = answer_key
         self.file = file
+        self.tags = tags[::]
+
+    @staticmethod
+    def get_tags(connection, id):
+        cursor = connection.cursor()
+        cursor.execute("""
+                       SELECT tag_name FROM Tags WHERE task_id=?
+                       """,
+                       [id])
+        return list(map(lambda x: x[0], list(cursor.fetchall())))
+
+    @staticmethod
+    def get_by_tags(connection, tags):
+        cursor = connection.cursor()
+        cursor.execute("""
+                       SELECT id FROM Tasks
+                       """)
+        ids = set(cursor.fetchall())
+        for tag in tags:
+            cursor.execute("""
+                           SELECT task_id FROM Tags WHERE tag_name=?
+                           """,
+                           [tag])
+            ids = ids.intersection(set(cursor.fetchall()))
+        for id in ids:
+            yield Task.pull_from_database(connection, id[0])
 
     def is_exist(self, connection):
         cursor = connection.cursor()
@@ -201,4 +230,9 @@ class Task:
                       REPLACE INTO Tasks(name, description, difficulty, answer_key, file) VALUES (?, ?, ?, ?, ?) 
                       """,
                        [self.name, self.description, self.difficulty, self.answer_key, self.file])
+        for tag in self.tags:
+            cursor.execute("""
+                          REPLACE INTO Tags(task_id, tag_name) VALUES (?, ?) 
+                          """,
+                           [self.id, tag])
         connection.commit()
