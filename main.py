@@ -53,7 +53,7 @@ def get_user(request):
     if not is_login:
         yandex_oauth = YandexOAuth(
             client_id=YANDEX_CLIENT_ID,
-            client_secret=YANDEX_CLIEND_SECRET 
+            client_secret=YANDEX_CLIEND_SECRET,
             redirect_uri=f'{THIS_URL}/set_token'
         )
         auth_url = yandex_oauth.get_authorization_url()
@@ -113,7 +113,7 @@ async def set_token(response: Response, request: Request):
     code = request.query_params["code"]
     yandex_oauth = YandexOAuth(
         client_id=YANDEX_CLIENT_ID,
-        client_secret=YANDEX_CLIEND_SECRET 
+        client_secret=YANDEX_CLIEND_SECRET,
         redirect_uri=f'{THIS_URL}/set_token'
     )
     token = yandex_oauth.get_token_from_code(code)
