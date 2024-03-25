@@ -226,7 +226,7 @@ class Task:
 
     def flush(self, connection):
         if self.id == 0:
-            self.id = "NULL"
+            self.id = None
         cursor = connection.cursor()
         cursor.execute("""
                       REPLACE INTO Tasks(id, name, description, difficulty, answer_key, file) VALUES (?, ?, ?, ?, ?, ?) 
