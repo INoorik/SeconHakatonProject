@@ -9,6 +9,9 @@ from yandexid import *
 import itertools
 import datetime
 
+YANDEX_CLIEND_ID = "b8896b95d4e4486c98f09dedce538379"
+YANDEX_CLIEND_SECRET = "106fbd36a6e04b4cb2eecddb2281c59c"
+THIS_URL = "http://www.seconhakatonctfproject.fun"
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -49,9 +52,9 @@ def get_user(request):
 
     if not is_login:
         yandex_oauth = YandexOAuth(
-            client_id='b8896b95d4e4486c98f09dedce538379',
-            client_secret='106fbd36a6e04b4cb2eecddb2281c59c',
-            redirect_uri='http://www.seconhakatonctfproject.fun/set_token'
+            client_id=YANDEX_CLIENT_ID,
+            client_secret=YANDEX_CLIEND_SECRET 
+            redirect_uri=f'{THIS_URL}/set_token'
         )
         auth_url = yandex_oauth.get_authorization_url()
 
@@ -109,9 +112,9 @@ async def logout():
 async def set_token(response: Response, request: Request):
     code = request.query_params["code"]
     yandex_oauth = YandexOAuth(
-        client_id='b8896b95d4e4486c98f09dedce538379',
-        client_secret='106fbd36a6e04b4cb2eecddb2281c59c',
-        redirect_uri='http://www.seconhakatonctfproject.fun/set_token'
+        client_id=YANDEX_CLIENT_ID,
+        client_secret=YANDEX_CLIEND_SECRET 
+        redirect_uri=f'{THIS_URL}/set_token'
     )
     token = yandex_oauth.get_token_from_code(code)
     response = RedirectResponse("/login")
