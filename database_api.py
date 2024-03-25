@@ -227,9 +227,9 @@ class Task:
     def flush(self, connection):
         cursor = connection.cursor()
         cursor.execute("""
-                      REPLACE INTO Tasks(name, description, difficulty, answer_key, file) VALUES (?, ?, ?, ?, ?) 
+                      REPLACE INTO Tasks(id, name, description, difficulty, answer_key, file) VALUES (?, ?, ?, ?, ?, ?) 
                       """,
-                       [self.name, self.description, self.difficulty, self.answer_key, self.file])
+                       [self.id, self.name, self.description, self.difficulty, self.answer_key, self.file])
         for tag in self.tags:
             cursor.execute("""
                           REPLACE INTO Tags(task_id, tag_name) VALUES (?, ?) 
