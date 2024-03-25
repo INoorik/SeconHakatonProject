@@ -151,14 +151,6 @@ async def register(request: Request):
     return templates.TemplateResponse("html/register.html", params)
 
 
-@app.get("/archive_filter")
-async def archive_filter(request: Request):
-    params = get_user(request)
-    params["current"] = "Tasks"
-    tags = []
-    user_login = request.query_params["login"]
-
-
 @app.get("/save_user")
 async def save_user(request: Request):
     params = get_user(request)

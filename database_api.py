@@ -232,6 +232,11 @@ class Task:
                       REPLACE INTO Tasks(id, name, description, difficulty, answer_key, file) VALUES (?, ?, ?, ?, ?, ?) 
                       """,
                        [self.id, self.name, self.description, self.difficulty, self.answer_key, self.file])
+        cursor.execute("""
+                       SELECT id FROM Tasks WHERE name=?
+                       """, [self.name]
+                       )
+        self.id = cursor.fetchone()[0]
         for tag in self.tags:
             cursor.execute("""
                           REPLACE INTO Tags(task_id, tag_name) VALUES (?, ?) 
