@@ -10,6 +10,7 @@ from os import getenv
 import itertools
 import datetime
 
+
 YANDEX_CLIENT_ID = getenv('YANDEX_CLIENT_ID')
 YANDEX_CLIENT_SECRET = getenv('YANDEX_CLIENT_SECRET')
 THIS_URL = getenv('THIS_URL')
