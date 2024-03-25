@@ -287,7 +287,7 @@ async def add_task(request: Request, Steganography: Optional[str] = Form(None),
     if Web == "on":
         tags.append("Web")
     if Revers == "on":
-        tags.append("Revers")
+        tags.append("Revers engineering")
     if Cipher == "on":
         tags.append("Cipher")
     if Forensic == "on":
