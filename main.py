@@ -6,12 +6,13 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from database_api import database_connection, Task, User, Submission
 from yandexid import *
+from os import getenv
 import itertools
 import datetime
 
-YANDEX_CLIENT_ID = "b8896b95d4e4486c98f09dedce538379"
-YANDEX_CLIENT_SECRET = "106fbd36a6e04b4cb2eecddb2281c59c"
-THIS_URL = "http://www.seconhakatonctfproject.fun"
+YANDEX_CLIENT_ID = getenv('YANDEX_CLIENT_ID')
+YANDEX_CLIENT_SECRET = getenv('YANDEX_CLIENT_SECRET')
+THIS_URL = getenv('THIS_URL')
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
