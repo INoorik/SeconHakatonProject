@@ -9,8 +9,8 @@ from yandexid import *
 import itertools
 import datetime
 
-YANDEX_CLIEND_ID = "b8896b95d4e4486c98f09dedce538379"
-YANDEX_CLIEND_SECRET = "106fbd36a6e04b4cb2eecddb2281c59c"
+YANDEX_CLIENT_ID = "b8896b95d4e4486c98f09dedce538379"
+YANDEX_CLIENT_SECRET = "106fbd36a6e04b4cb2eecddb2281c59c"
 THIS_URL = "http://www.seconhakatonctfproject.fun"
 
 app = FastAPI()
