@@ -10,6 +10,17 @@
 {% include 'html/login_container.html' %}
 {% include 'html/top_bar.html' %}
 
+<div>
+  <form method="get" action="/archive">
+    Steganography <input type="checkbox" name="Steganography" {% if Steganography %} checked {% endif %}>
+    Web <input type="checkbox" name="Web" {% if Web %} checked {% endif %}>
+    Revers engineering <input type="checkbox" name="Revers engineering" {% if Revers %} checked {% endif %}>
+    Cipher <input type="checkbox" name="Cipher" {% if Cipher %} checked {% endif %}>
+    Forensic <input type="checkbox" name="Forensic" {% if Forensic %} checked {% endif %}><br>
+    <input type="submit" name = "submit" value="Filter" class="submit">
+  </form>
+</div>
+
 <table class="archive table">
   <caption>
     Archive

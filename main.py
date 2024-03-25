@@ -151,6 +151,14 @@ async def register(request: Request):
     return templates.TemplateResponse("html/register.html", params)
 
 
+@app.get("/archive_filter")
+async def archive_filter(request: Request):
+    params = get_user(request)
+    params["current"] = "Tasks"
+    tags = []
+    user_login = request.query_params["login"]
+
+
 @app.get("/save_user")
 async def save_user(request: Request):
     params = get_user(request)
@@ -166,7 +174,16 @@ async def save_user(request: Request):
 async def archive(request: Request):
     params = get_user(request)
     params["current"] = "Tasks"
-    params["tasks"] = list(itertools.islice(Task.get_all(database_connection), 5))
+    tags = []
+    for tag in ["Web", "Steganography", "Revers engineering", "Cipher", "Forensic"]:
+        if tag in request.query_params:
+            tags.append(tag)
+            params[tag] = True
+
+    if "Revers engineering" in request.query_params:
+        params["Revers"] = True
+
+    params["tasks"] = list(itertools.islice(Task.get_by_tags(database_connection, tags), 10))
 
     return templates.TemplateResponse("html/archive.html", params)
 
@@ -254,12 +271,27 @@ async def permission_edit(request: Request, id, permission_level: Optional[int] 
 
 
 @app.post("/add_task")
-async def add_task(request: Request, name: Optional[str] = Form(None), description: Optional[str] = Form(None),
+async def add_task(request: Request, Steganography: Optional[str] = Form(None),
+                   Web: Optional[str] = Form(None), Revers: Optional[str] = Form(None),
+                   Cipher: Optional[str] = Form(None), Forensic: Optional[str] = Form(None),
+                   name: Optional[str] = Form(None), description: Optional[str] = Form(None),
                    difficulty: Optional[int] = Form(None), answer_key: Optional[str] = Form(None),
                    file: UploadFile = None):
     params = get_user(request)
     if params["permission"] == 0:
         return RedirectResponse("/")
+
+    tags = []
+    if Steganography == "on":
+        tags.append("Steganography")
+    if Web == "on":
+        tags.append("Web")
+    if Revers == "on":
+        tags.append("Revers")
+    if Cipher == "on":
+        tags.append("Cipher")
+    if Forensic == "on":
+        tags.append("Forensic")
 
     if name is None or description is None or difficulty is None or answer_key is None:
         return RedirectResponse("/moder_panel", status_code=303)
@@ -270,7 +302,7 @@ async def add_task(request: Request, name: Optional[str] = Form(None), descripti
         file.file.close()
         up_file.close()
 
-    Task(0, name, description, difficulty, answer_key, file.filename).flush(database_connection)
+    Task(0, name, description, difficulty, answer_key, file.filename, tags).flush(database_connection)
 
     return RedirectResponse("/archive", status_code=303)
 
